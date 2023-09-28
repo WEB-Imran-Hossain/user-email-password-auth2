@@ -1,16 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 
 const Header = () => {
-    const navLinks = <>
+    const navLinks = 
+    <>
         <li><NavLink to="/">Home</NavLink></li>
         <li><NavLink to="/Login">Login</NavLink></li>
         <li><NavLink to="/register">Register</NavLink></li>
-        
-
-
-
+        <li><NavLink to="/heroRegister">Hero Register</NavLink></li>
     </>
-
 
     return (
         <div className="max-w-[80vw] mx-auto mt-10">
