@@ -1,8 +1,9 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import auth from "../../Firebase/Firebase.config";
 import { useState } from "react";
 import { MdRemoveRedEye } from "react-icons/md";
 import { AiFillEyeInvisible } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const Register = () => {
     const [registerError, setRegisterError] = useState("");
@@ -11,10 +12,11 @@ const Register = () => {
 
     const handleRegister = (e) => {
         e.preventDefault();
+        const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
         const accepted = e.target.terms.checked;
-        console.log(email, password, accepted);
+        console.log(name, email, password, accepted);
 
         // reset error
         setRegisterError("");
@@ -26,7 +28,7 @@ const Register = () => {
         if (password.length < 6) {
             setRegisterError("Password should be at least 6 characters or longer");
             return;
-        } else if (/[A - Z]/.test(password)) {
+        } else if (!/[A - Z]/.test(password)) {
             setRegisterError(
                 "Your password should have at least one uppercase characters"
             );
@@ -41,6 +43,23 @@ const Register = () => {
             .then((result) => {
                 console.log(result.user);
                 setSuccess("User Created Successfully.");
+
+                // update profile
+                updateProfile(result.user, {
+                    displayName: name,
+                    photoURL: "https://example.com/jane-q-user/profile.jpg"
+                })
+                    .then(()=>console.log('profile updated'))
+                    .catch()
+
+                // send varification email
+                sendEmailVerification(result.user)
+                    .then(() => {
+                        alert('Please check your email and verfy your account');
+                    })
+                    .catch()
+
+
             })
             .catch((error) => {
                 console.error(error);
@@ -53,6 +72,15 @@ const Register = () => {
             <div className="flex flex-col justify-center items-center h-screen">
                 <h2 className="text-3xl">Please Register</h2>
                 <form onSubmit={handleRegister}>
+                    <input
+                        className="border mt-4"
+                        type="text"
+                        name="name"
+                        placeholder="Your name"
+                        required
+                    />
+                    <br />
+
                     <input
                         className="border mt-4"
                         type="email"
@@ -95,6 +123,7 @@ const Register = () => {
                 </form>
                 {registerError && <p className="text-red-600">{registerError}</p>}
                 {success && <p className="text-green-600">{success}</p>}
+                <p>Already have an acount? <Link to='/login'>Please login</Link> </p>
             </div>
         </>
     );
