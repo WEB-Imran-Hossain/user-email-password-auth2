@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <Register></Register>
       },
       {
-        path:'/registerHero',
+        path:'/heroRegister',
         element: <HeroRegister></HeroRegister>
       }
     ]
