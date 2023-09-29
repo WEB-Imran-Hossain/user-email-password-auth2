@@ -1,11 +1,13 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../Firebase/Firebase.config";
 import { useState } from "react";
+import { MdRemoveRedEye } from "react-icons/md";
+import { AiFillEyeInvisible } from "react-icons/ai";
 
 const Register = () => {
     const [registerError, setRegisterError] = useState('');
     const [success, setSuccess] = useState('');
-
+    const [showPassword, setShowPassword] = useState(false);
 
 
     const handleRegister = (e) => {
@@ -27,8 +29,13 @@ const Register = () => {
         if (password.length < 6) {
             setRegisterError('Password should be at least 6 characters or longer')
             return;
+
         }
 
+        else if (/[A - Z]/.test(password)) {
+            setRegisterError('Your password should have at least one uppercase characters')
+            return;
+        }
 
 
 
@@ -60,13 +67,20 @@ const Register = () => {
                     <br />
                     <input
                         className="border mt-2"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         name="password"
                         id=""
                         placeholder="Password"
                         required
                     />
+
+                    <span onClick={()=> setShowPassword(!showPassword)}>
+                        {
+                            showPassword ? <MdRemoveRedEye></MdRemoveRedEye> : <AiFillEyeInvisible></AiFillEyeInvisible>
+                        }
+                    </span>
                     <br />
+
                     <input
                         className="mt-2 btn btn-primary"
                         type="submit"
